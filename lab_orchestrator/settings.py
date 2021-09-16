@@ -102,7 +102,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
-    ]
+    ],
 }
 
 
@@ -143,6 +143,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SECRET_KEY = os.environ.get('SECRET_KEY', "changeme")
 DEBUG = bool(strtobool(os.environ.get('DEBUG', 'False')))
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', "localhost;127.0.0.1").split(";")
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', "localhost;127.0.0.1;testing").split(";")
 USE_X_FORWARDED_HOST = bool(strtobool(os.environ.get('USE_X_FORWARDED_HOST', 'False')))
 DEVELOPMENT = bool(strtobool(os.environ.get("DEVELOPMENT", "False")))

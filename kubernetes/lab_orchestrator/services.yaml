@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: lab-controller-api
+  namespace: lab-controller
+  labels:
+    app: lab-controller-api
+spec:
+  selector:
+    app: lab-controller-api
+  ports:
+    - port: 80 # incoming
+      name: http
+      protocol: TCP
+      targetPort: 5000 # port in the pod
+      nodePort: 30001
+  type: NodePort

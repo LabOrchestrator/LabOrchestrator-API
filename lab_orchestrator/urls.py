@@ -6,6 +6,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.schemas import get_schema_view
+import lab_orchestrator
 
 
 @api_view(['GET'])
@@ -21,6 +22,8 @@ def api_root(request, format=None):
 def root(request, format=None):
     return Response({
         'api': reverse('api_root', request=request, format=format),
+        'openapi-schema': reverse('openapi-schema', request=request, format=format),
+        'swagger': reverse('swagger-ui', request=request, format=format),
     })
 
 
@@ -38,8 +41,7 @@ urlpatterns += [
 urlpatterns += [
     url(r'^openapi-schema/', get_schema_view(
         title="Lab Orchestrator API",
-        description="",
-        version="1.0.0",
+        version=lab_orchestrator.__version__,
         public=True,
     ), name='openapi-schema'),
     url(r'swagger/', TemplateView.as_view(

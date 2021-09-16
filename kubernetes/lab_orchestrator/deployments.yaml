@@ -13,7 +13,7 @@ spec:
       labels:
         app: lab-controller-api
     spec:
-      serviceAccountName: lab-controller-account
+      serviceAccountName: lab-controller-api-account
       containers:
         - name: lab-orchestrator-api
           image: biolachs2/lab_orchestrator:latest
@@ -27,4 +27,4 @@ spec:
             - configMapRef:
                 name: postgres-config
             - configMapRef:
-                name: mail-config
+                name: lab-config

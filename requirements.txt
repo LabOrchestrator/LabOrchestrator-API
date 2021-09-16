@@ -3,3 +3,4 @@ djangorestframework==3.12.4
 lab-orchestrator-lib==0.0.14
 lab-orchestrator-lib-django-adapter==0.0.6
 gunicorn==20.0.4
+psycopg==2.9.1

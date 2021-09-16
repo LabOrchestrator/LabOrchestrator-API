@@ -1,8 +1,11 @@
 from django.contrib import admin
+from django.views.generic import TemplateView
+from django.conf.urls import url
 from django.urls import path, include
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
+from rest_framework.schemas import get_schema_view
 
 
 @api_view(['GET'])
@@ -30,4 +33,17 @@ urlpatterns = [
 urlpatterns += [
     path('admin/', admin.site.urls),                    # contains the admin web-ui
     path('api-auth/', include('rest_framework.urls')),  # contains login and logout for the api web-ui
+]
+
+urlpatterns += [
+    url(r'^openapi-schema/', get_schema_view(
+        title="Lab Orchestrator API",
+        description="",
+        version="1.0.0",
+        public=True,
+    ), name='openapi-schema'),
+    url(r'swagger/', TemplateView.as_view(
+        template_name='swagger-ui.html',
+        extra_context={'schema_url': 'openapi-schema'}
+    ), name='swagger-ui'),
 ]

@@ -15,6 +15,7 @@ def api_root(request, format=None):
         'docker_image': reverse('lab_orchestrator_app:docker_image-list', request=request, format=format),
         'lab': reverse('lab_orchestrator_app:lab-list', request=request, format=format),
         'lab_instances': reverse('lab_orchestrator_app:lab_instance-list', request=request, format=format),
+        'users': reverse('user:user-list', request=request, format=format),
     })
 
 
@@ -24,6 +25,7 @@ def root(request, format=None):
         'api': reverse('api_root', request=request, format=format),
         'openapi-schema': reverse('openapi-schema', request=request, format=format),
         'swagger': reverse('swagger-ui', request=request, format=format),
+        'rest-auth': reverse('rest_auth_root', request=request, format=format)
     })
 
 
@@ -31,11 +33,13 @@ urlpatterns = [
     path('', root, name='root'),
     path('api/', api_root, name='api_root'),
     path('api/', include('lab_orchestrator_app.urls')),
+    path('api/', include('user.urls')),
 ]
 
 urlpatterns += [
     path('admin/', admin.site.urls),                    # contains the admin web-ui
     path('api-auth/', include('rest_framework.urls')),  # contains login and logout for the api web-ui
+    path('rest-auth/', include('user_auth.urls')),  # contains login/logout/registration/profile as rest api
 ]
 
 urlpatterns += [

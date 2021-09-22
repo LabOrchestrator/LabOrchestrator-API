@@ -1,3 +1,4 @@
+import django.template.loaders.filesystem
 import sys
 from distutils.util import strtobool
 from pathlib import Path
@@ -13,7 +14,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',    # https://github.com/encode/django-rest-framework/issues/6250
+    'django.contrib.sites',        # allauth social login and dependency of dj_rest_auth password reset and registration
+    'allauth',                     # allauth social login and dependency of dj_rest_auth registration
+    'allauth.account',             # allauth social login and dependency of dj_rest_auth registration
+    'allauth.socialaccount',       # allauth social login and dependency of dj_rest_auth registration
+    'dj_rest_auth',                # enables authentication rest-api and user changes including password-reset
+    'dj_rest_auth.registration',   # enables registration rest-api
     'lab_orchestrator_lib_django_adapter',
+    'user.apps.UserConfig',  # app that contains user model
+    'user_auth.apps.UserAuthConfig',  # app for profile, authentication and registration; uses dj_rest_auth and allauth
 ]
 
 MIDDLEWARE = [
@@ -125,6 +135,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Mail
 EMAIL_USE_TLS = bool(strtobool(os.environ.get('EMAIL_USE_TLS', 'True')))
@@ -152,3 +163,27 @@ LAB_VNC_PROTOCOL = os.environ.get("LAB_VNC_PROTOCOL", "http")
 LAB_VNC_PATH = os.environ.get("LAB_VNC_PATH", "vnc_lite.html")
 WS_PROXY_HOST = os.environ.get("WS_PROXY_HOST", "localhost")
 WS_PROXY_PORT = os.environ.get("WS_PROXY_PORT", "30002")
+
+# custom user model
+AUTH_USER_MODEL = 'user.User'
+
+# redirect after authentication
+LOGIN_REDIRECT_URL = '/api/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/api/'
+
+# authentication
+SITE_ID = 1
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_EMAIL_VERIFICATION = os.environ.get('ACCOUNT_EMAIL_VERIFICATION', 'optional')
+REST_AUTH_SERIALIZERS = {
+    'LOGIN_SERIALIZER': 'user_auth.serializers.CustomLoginSerializer',
+    'USER_DETAILS_SERIALIZER': 'user_auth.serializers.CustomUserDetailsSerializer',
+}
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'user_auth.serializers.CustomRegisterSerializer',
+}
+

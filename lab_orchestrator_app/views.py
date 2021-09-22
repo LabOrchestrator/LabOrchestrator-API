@@ -138,6 +138,10 @@ class LabInstanceViewSet(mixins.CreateModelMixin,
 
     @action(detail=True)
     def token(self, request, pk=None):
+        """Creates a new JWT token for this lab instance.
+
+        :return: The same response like when you start a new lab.
+        """
         lab_instance = self.get_object()
         user_id = request.user.id
         if user_id != lab_instance.user_id:

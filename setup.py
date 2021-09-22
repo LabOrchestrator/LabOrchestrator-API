@@ -31,7 +31,8 @@ setup(
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
-        "Operating System :: OS Independent"
+        "Operating System :: OS Independent",
+        "Development Status :: 3 - Alpha",
     ],
     python_requires='>=3.8',
     install_requires=REQUIREMENTS,

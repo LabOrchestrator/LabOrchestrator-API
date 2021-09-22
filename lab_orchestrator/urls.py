@@ -12,9 +12,9 @@ import lab_orchestrator
 @api_view(['GET'])
 def api_root(request, format=None):
     return Response({
-        'docker_image': reverse('lab_orchestrator:docker_image-list', request=request, format=format),
-        'lab': reverse('lab_orchestrator:lab-list', request=request, format=format),
-        'lab_instances': reverse('lab_orchestrator:lab_instance-list', request=request, format=format),
+        'docker_image': reverse('lab_orchestrator_app:docker_image-list', request=request, format=format),
+        'lab': reverse('lab_orchestrator_app:lab-list', request=request, format=format),
+        'lab_instances': reverse('lab_orchestrator_app:lab_instance-list', request=request, format=format),
     })
 
 
@@ -30,7 +30,7 @@ def root(request, format=None):
 urlpatterns = [
     path('', root, name='root'),
     path('api/', api_root, name='api_root'),
-    path('api/', include('lab_orchestrator_lib_django_adapter.urls')),
+    path('api/', include('lab_orchestrator_app.urls')),
 ]
 
 urlpatterns += [

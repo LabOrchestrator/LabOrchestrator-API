@@ -20,5 +20,7 @@ docker-push:
 	docker push biolachs2/lab_orchestrator:v$(VERSION)
 	docker push biolachs2/lab_orchestrator:latest
 
-release: docker-build git-tag docker-push git-release
+release: test docker-build git-tag docker-push git-release
 
+test:
+	./manage.py test

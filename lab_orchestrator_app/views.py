@@ -18,6 +18,10 @@ from lab_orchestrator_lib_django_adapter.controller_collection import get_defaul
 from lab_orchestrator_lib_django_adapter.models import LabInstanceModel, LabModel, DockerImageModel
 from lab_orchestrator_lib_django_adapter.serializers import LabInstanceModelSerializer, LabInstanceKubernetesSerializer, \
     LabModelSerializer, DockerImageModelSerializer
+from lab_orchestrator_lib_auth.auth import LabInstanceTokenParams, generate_auth_token
+from lab_orchestrator_lib.controller.controller import LabInstanceController 
+
+from lab_orchestrator import settings
 
 
 class IsAdminOrReadOnly(BasePermission):
@@ -58,10 +62,10 @@ class LabViewSet(viewsets.ModelViewSet):
 
 
 class LabInstanceViewSet(mixins.CreateModelMixin,
-                   mixins.RetrieveModelMixin,
-                   mixins.DestroyModelMixin,
-                   mixins.ListModelMixin,
-                   GenericViewSet):
+                         mixins.RetrieveModelMixin,
+                         mixins.DestroyModelMixin,
+                         mixins.ListModelMixin,
+                         GenericViewSet):
     """Example ViewSet for lab instances.
 
     Contains list, retrieve, create and delete method. Can't be updated because lab instances are immutable. If you are
@@ -106,6 +110,9 @@ class LabInstanceViewSet(mixins.CreateModelMixin,
         # get lab object for serialisation
         lab: LabModel = LabModel.objects.get(pk=lab_instance_kubernetes.lab_id)
         user = get_user_model().objects.get(pk=lab_instance_kubernetes.user_id)
+        lab_vnc_path = f"{settings.LAB_VNC_PROTOCOL}://{settings.LAB_VNC_HOST}:{settings.LAB_VNC_PORT}/" \
+                       f"{settings.LAB_VNC_PATH}?host={settings.WS_PROXY_HOST}&port={settings.WS_PROXY_PORT}&" \
+                       f"path={lab_instance_kubernetes.jwt_token}/{lab.docker_image_name}"
         data = {
             'id': lab_instance_kubernetes.primary_key,
             'lab': {
@@ -124,6 +131,7 @@ class LabInstanceViewSet(mixins.CreateModelMixin,
             },
             'user_id': self.request.user.id,
             'jwt_token': lab_instance_kubernetes.jwt_token,
+            'lab_vnc_path': lab_vnc_path
         }
         return data
 

@@ -6,10 +6,11 @@ used as a template.
 from typing import Optional
 
 from django.contrib.auth import get_user_model
+from rest_framework.decorators import action
 from lab_orchestrator_lib.controller.controller_collection import ControllerCollection
 from rest_framework.viewsets import GenericViewSet
 
-from lab_orchestrator_lib.model.model import LabInstanceKubernetes
+from lab_orchestrator_lib.model.model import LabInstanceKubernetes, Lab
 from rest_framework import viewsets, permissions, status, mixins
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 from rest_framework.response import Response
@@ -135,6 +136,22 @@ class LabInstanceViewSet(mixins.CreateModelMixin,
         }
         return data
 
+    @action(detail=True)
+    def token(self, request, pk=None):
+        lab_instance = self.get_object()
+        user_id = request.user.id
+        if user_id != lab_instance.user_id:
+            raise Exception("You are allowed to access this lab instance")
+        lab = self.get_cc().lab_ctrl.get(lab_instance.lab_id)
+        namespace_name = LabInstanceController.gen_namespace_name(lab, user_id, lab_instance.id)
+        allowed_vmi_names = lab.docker_image_name
+        lab_instance_token_params = LabInstanceTokenParams(lab_instance.lab_id, lab_instance.id, namespace_name,
+                                                           allowed_vmi_names)
+        jwt_token = generate_auth_token(user_id, lab_instance_token_params, settings.SECRET_KEY)
+        lab_instance_kubernetes = LabInstanceKubernetes(lab_instance.id, lab_instance.lab_id, user_id, jwt_token)
+        data = self.serialize_lab_instance_kubernetes(lab_instance_kubernetes)
+        return Response(data)
+
     def create(self, request, *args, **kwargs):
         """Creates a lab instance.
 
@@ -145,6 +162,9 @@ class LabInstanceViewSet(mixins.CreateModelMixin,
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         lab_id = serializer.data['lab']
+        lab = self.get_cc().lab_ctrl.get(lab_id)
+        if lab is None:
+            raise Exception("Invalid lab id")
         # start lab with lab instance controller
         lab_instance_kubernetes = self.get_cc().lab_instance_ctrl.create(lab_id, request.user.id)
         # get serialisation

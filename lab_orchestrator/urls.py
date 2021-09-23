@@ -13,6 +13,7 @@ import lab_orchestrator
 def api_root(request, format=None):
     return Response({
         'docker_image': reverse('lab_orchestrator_app:docker_image-list', request=request, format=format),
+        'lab_docker_image': reverse('lab_orchestrator_app:lab_docker_image-list', request=request, format=format),
         'lab': reverse('lab_orchestrator_app:lab-list', request=request, format=format),
         'lab_instances': reverse('lab_orchestrator_app:lab_instance-list', request=request, format=format),
         'users': reverse('user:user-list', request=request, format=format),

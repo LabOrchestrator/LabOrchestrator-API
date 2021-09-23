@@ -6,7 +6,7 @@ you probably need to implement the serializers by yourself, but this can be used
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from lab_orchestrator_lib_django_adapter.models import LabModel, LabInstanceModel, DockerImageModel
+from lab_orchestrator_lib_django_adapter.models import LabModel, LabInstanceModel, DockerImageModel, LabDockerImageModel
 
 
 class FixedRelatedField(serializers.PrimaryKeyRelatedField):
@@ -25,16 +25,20 @@ class DockerImageModelSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class LabModelDockerImageSerializer(serializers.ModelSerializer):
+class LabDockerImageModelSerializer(serializers.ModelSerializer):
     class Meta:
-        model = DockerImageModel
+        model = LabDockerImageModel
+        fields = '__all__'
+
+
+class LabModelLabDockerImageModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LabDockerImageModel
         fields = '__all__'
 
 
 class LabModelSerializer(serializers.ModelSerializer):
-    docker_image = LabModelDockerImageSerializer(many=False, read_only=True)
-    docker_image_id = FixedRelatedField(queryset=DockerImageModel.objects.all(), write_only=False, many=False,
-                                        read_only=False, label='Docker Image', required=True)
+    lab_docker_images = LabModelLabDockerImageModelSerializer(many=True, read_only=True)
 
     class Meta:
         model = LabModel
@@ -42,7 +46,7 @@ class LabModelSerializer(serializers.ModelSerializer):
 
 
 class LabInstanceModelLabSerializer(serializers.ModelSerializer):
-    docker_image = LabModelDockerImageSerializer(many=False, read_only=True)
+    lab_docker_images = LabModelLabDockerImageModelSerializer(many=True, read_only=True)
 
     class Meta:
         model = LabModel

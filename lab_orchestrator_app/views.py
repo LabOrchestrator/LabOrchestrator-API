@@ -16,13 +16,14 @@ from rest_framework.permissions import BasePermission, SAFE_METHODS
 from rest_framework.response import Response
 
 from lab_orchestrator_lib_django_adapter.controller_collection import get_default_cc
-from lab_orchestrator_lib_django_adapter.models import LabInstanceModel, LabModel, DockerImageModel
+from lab_orchestrator_lib_django_adapter.models import LabInstanceModel, LabModel, DockerImageModel, LabDockerImageModel
 from lab_orchestrator_lib_django_adapter.serializers import LabInstanceModelSerializer, LabInstanceKubernetesSerializer, \
     LabModelSerializer, DockerImageModelSerializer
 from lab_orchestrator_lib_auth.auth import LabInstanceTokenParams, generate_auth_token
-from lab_orchestrator_lib.controller.controller import LabInstanceController 
+from lab_orchestrator_lib.controller.controller import LabInstanceController
 
 from lab_orchestrator import settings
+from lab_orchestrator_app.serializers import LabDockerImageModelSerializer
 
 
 class IsAdminOrReadOnly(BasePermission):
@@ -46,6 +47,20 @@ class DockerImageViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     queryset = DockerImageModel.objects.all()
     serializer_class = DockerImageModelSerializer
+
+
+class LabDockerImageViewSet(viewsets.ModelViewSet):
+    """Example ViewSet for lab docker images.
+
+    Only admins can edit and add lab docker images. Everyone (even not authenticated users) can use the list and
+    retrieve methods.
+
+    This doesn't need to use the lab docker image controller, because the controller has no special implementation of
+    the create or delete methods and it's save to manipulate the database objects directly without the controller.
+    """
+    permission_classes = [IsAdminOrReadOnly]
+    queryset = LabDockerImageModel.objects.all()
+    serializer_class = LabDockerImageModelSerializer
 
 
 class LabViewSet(viewsets.ModelViewSet):
@@ -111,19 +126,22 @@ class LabInstanceViewSet(mixins.CreateModelMixin,
         # get lab object for serialisation
         lab: LabModel = LabModel.objects.get(pk=lab_instance_kubernetes.lab_id)
         user = get_user_model().objects.get(pk=lab_instance_kubernetes.user_id)
+        lab_docker_images = []
+        for lab_docker_image in lab.lab_docker_images.all():
+            lab_docker_images.append({
+                'id': lab_docker_image.id,
+                'docker_image_id': lab_docker_image.docker_image.id,
+                'docker_image_name': lab_docker_image.docker_image_name,
+            })
         lab_vnc_path = f"{settings.LAB_VNC_PROTOCOL}://{settings.LAB_VNC_HOST}:{settings.LAB_VNC_PORT}/" \
                        f"{settings.LAB_VNC_PATH}?host={settings.WS_PROXY_HOST}&port={settings.WS_PROXY_PORT}&" \
-                       f"path={lab_instance_kubernetes.jwt_token}/{lab.docker_image_name}"
+                       f"path={lab_instance_kubernetes.jwt_token}/{lab_docker_images[0]['docker_image_name']}"
         data = {
             'id': lab_instance_kubernetes.primary_key,
             'lab': {
                 'id': lab.pk,
                 'name': lab.name,
-                'docker_image': {
-                    'id': lab.docker_image.id,
-                    'name': lab.docker_image.name,
-                },
-                'docker_image_name': lab.docker_image_name,
+                'docker_images': lab_docker_images,
             },
             'lab_id': lab_instance_kubernetes.lab_id,
             'user': {

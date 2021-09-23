@@ -10,9 +10,8 @@ from rest_framework.decorators import action
 from lab_orchestrator_lib.controller.controller_collection import ControllerCollection
 from rest_framework.viewsets import GenericViewSet
 
-from lab_orchestrator_lib.model.model import LabInstanceKubernetes, Lab
+from lab_orchestrator_lib.model.model import LabInstanceKubernetes
 from rest_framework import viewsets, permissions, status, mixins
-from rest_framework.permissions import BasePermission, SAFE_METHODS
 from rest_framework.response import Response
 
 from lab_orchestrator_lib_django_adapter.controller_collection import get_default_cc
@@ -22,17 +21,9 @@ from lab_orchestrator_lib_django_adapter.serializers import LabInstanceModelSeri
 from lab_orchestrator_lib_auth.auth import LabInstanceTokenParams, generate_auth_token
 from lab_orchestrator_lib.controller.controller import LabInstanceController
 
+from commons.permissions import IsAdminOrReadOnly
 from lab_orchestrator import settings
 from lab_orchestrator_app.serializers import LabDockerImageModelSerializer
-
-
-class IsAdminOrReadOnly(BasePermission):
-    """
-    The request is authenticated as an admin, or is a read-only request.
-    """
-
-    def has_permission(self, request, view):
-        return bool(request.method in SAFE_METHODS or (request.user and request.user.is_staff))
 
 
 class DockerImageViewSet(viewsets.ModelViewSet):

@@ -10,7 +10,7 @@ python manage.py migrate
 
 # Create superuser
 echo "Creating superuser"
-if [ -n "$DJANGO_SUPERUSER_EMAIL" ] && [ -n "$DJANGO_SUPERUSER_USERNAME" ] && [ -n "$DJANGO_SUPERUSER_PASSWORD" ] ; then
+if [ -n "$DJANGO_SUPERUSER_EMAIL" ] && [ -n "$DJANGO_SUPERUSER_PASSWORD" ] ; then
     python manage.py createsuperuser --no-input
 fi
 

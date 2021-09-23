@@ -126,16 +126,20 @@ class LabInstanceViewSet(mixins.CreateModelMixin,
         # get lab object for serialisation
         lab: LabModel = LabModel.objects.get(pk=lab_instance_kubernetes.lab_id)
         user = get_user_model().objects.get(pk=lab_instance_kubernetes.user_id)
+        all_lab_docker_images = lab.lab_docker_images.all()
         lab_docker_images = []
-        for lab_docker_image in lab.lab_docker_images.all():
+        for lab_docker_image in all_lab_docker_images:
             lab_docker_images.append({
                 'id': lab_docker_image.id,
                 'docker_image_id': lab_docker_image.docker_image.id,
                 'docker_image_name': lab_docker_image.docker_image_name,
             })
+        allowed_vmis_query = ",".join([elm.docker_image_name for elm in all_lab_docker_images])
         lab_vnc_path = f"{settings.LAB_VNC_PROTOCOL}://{settings.LAB_VNC_HOST}:{settings.LAB_VNC_PORT}/" \
-                       f"{settings.LAB_VNC_PATH}?host={settings.WS_PROXY_HOST}&port={settings.WS_PROXY_PORT}&" \
-                       f"path={lab_instance_kubernetes.jwt_token}/{lab_docker_images[0]['docker_image_name']}"
+                       f"{settings.LAB_VNC_PATH}?host={settings.WS_PROXY_HOST}&port={settings.WS_PROXY_PORT}" \
+                       f"&path={lab_instance_kubernetes.jwt_token}/{lab_docker_images[0]['docker_image_name']}" \
+                       f"&allowed_vmis={allowed_vmis_query}" \
+                       f"&autoconnect=1"
         data = {
             'id': lab_instance_kubernetes.primary_key,
             'lab': {
@@ -146,7 +150,7 @@ class LabInstanceViewSet(mixins.CreateModelMixin,
             'lab_id': lab_instance_kubernetes.lab_id,
             'user': {
                 'id': user.id,
-                'username': user.username,
+                'email': user.email,
             },
             'user_id': self.request.user.id,
             'jwt_token': lab_instance_kubernetes.jwt_token,
@@ -164,13 +168,15 @@ class LabInstanceViewSet(mixins.CreateModelMixin,
         user_id = request.user.id
         if user_id != lab_instance.user_id:
             raise Exception("You are allowed to access this lab instance")
-        lab = self.get_cc().lab_ctrl.get(lab_instance.lab_id)
+        lab = LabModel.objects.get(pk=lab_instance.lab_id)
         namespace_name = LabInstanceController.gen_namespace_name(lab, user_id, lab_instance.id)
-        allowed_vmi_names = lab.docker_image_name
+        all_lab_docker_images = lab.lab_docker_images.all()
+        allowed_vmi_names = [elm.docker_image_name for elm in all_lab_docker_images]
         lab_instance_token_params = LabInstanceTokenParams(lab_instance.lab_id, lab_instance.id, namespace_name,
                                                            allowed_vmi_names)
         jwt_token = generate_auth_token(user_id, lab_instance_token_params, settings.SECRET_KEY)
-        lab_instance_kubernetes = LabInstanceKubernetes(lab_instance.id, lab_instance.lab_id, user_id, jwt_token)
+        lab_instance_kubernetes = LabInstanceKubernetes(lab_instance.id, lab_instance.lab_id, user_id, jwt_token,
+                                                        allowed_vmi_names)
         data = self.serialize_lab_instance_kubernetes(lab_instance_kubernetes)
         return Response(data)
 

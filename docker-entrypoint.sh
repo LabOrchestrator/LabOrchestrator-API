@@ -6,7 +6,7 @@ python manage.py collectstatic --noinput
 
 # Apply database migrations
 echo "Apply database migrations"
-python manage.py migrate --run-syncdb
+python manage.py migrate
 
 # Create superuser
 if [ -n "$DJANGO_SUPERUSER_EMAIL" ] && [ -n "$DJANGO_SUPERUSER_PASSWORD" ] && [ -n "$DJANGO_SUPERUSER_FIRST_NAME" ] ; then

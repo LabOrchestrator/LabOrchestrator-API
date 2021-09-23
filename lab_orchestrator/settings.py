@@ -22,8 +22,9 @@ INSTALLED_APPS = [
     'dj_rest_auth',                # enables authentication rest-api and user changes including password-reset
     'dj_rest_auth.registration',   # enables registration rest-api
     'lab_orchestrator_lib_django_adapter',
-    'user.apps.UserConfig',  # app that contains user model
-    'user_auth.apps.UserAuthConfig',  # app for profile, authentication and registration; uses dj_rest_auth and allauth
+    'user',  # app that contains user model
+    'user_auth',  # app for profile, authentication and registration; uses dj_rest_auth and allauth
+    'instructions',  # app for profile, authentication and registration; uses dj_rest_auth and allauth
 ]
 
 MIDDLEWARE = [

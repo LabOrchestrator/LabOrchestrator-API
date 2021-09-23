@@ -15,6 +15,7 @@ def api_root(request, format=None):
         'docker_image': reverse('lab_orchestrator_app:docker_image-list', request=request, format=format),
         'lab_docker_image': reverse('lab_orchestrator_app:lab_docker_image-list', request=request, format=format),
         'lab': reverse('lab_orchestrator_app:lab-list', request=request, format=format),
+        'instructions': reverse('instructions:instruction_page-list', request=request, format=format),
         'lab_instances': reverse('lab_orchestrator_app:lab_instance-list', request=request, format=format),
         'users': reverse('user:user-list', request=request, format=format),
     })
@@ -35,6 +36,7 @@ urlpatterns = [
     path('api/', api_root, name='api_root'),
     path('api/', include('lab_orchestrator_app.urls')),
     path('api/', include('user.urls')),
+    path('api/', include('instructions.urls')),
 ]
 
 urlpatterns += [

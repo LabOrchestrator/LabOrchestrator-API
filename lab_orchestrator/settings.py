@@ -166,6 +166,7 @@ LAB_VNC_PROTOCOL = os.environ.get("LAB_VNC_PROTOCOL", "http")
 LAB_VNC_PATH = os.environ.get("LAB_VNC_PATH", "vnc_lite.html")
 WS_PROXY_HOST = os.environ.get("WS_PROXY_HOST", "localhost")
 WS_PROXY_PORT = os.environ.get("WS_PROXY_PORT", "30002")
+WS_PROXY_PATH_PREFIX = os.environ.get("WS_PROXY_PATH_PREFIX", "")
 
 # custom user model
 AUTH_USER_MODEL = 'user.User'

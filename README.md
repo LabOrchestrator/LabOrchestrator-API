@@ -50,7 +50,8 @@ Check out the developer documentation at [laborchestrator-api.readthedocs.io](ht
 - `LAB_VNC_PROTOCOL` (str): The protocol that should be used. Valid values: `http` or `https`.
 - `LAB_VNC_PATH` (str): The path to the novnc html script that should be opened. For example: `labvnc/vnc_lite.html`.
 - `WS_PROXY_HOST` (str): The external host address of the websocket proxy. Should be the domain name where you run this, for example: `laborchestrator.com`.
-- `WS_PROXY_PORT` (int): The port of the ws proxy instance. Default is 30002, you should set it to 80 or 443.
+- `WS_PROXY_PORT` (int): The port of the ws proxy instance. Default is 30002, you should set it to 80 or 443. 
+- `WS_PROXY_PATH_PREFIX` (str): Prefix that should be inserted into the websocket path.
 - `DJANGO_SUPERUSER_EMAIL` (str): Only needed when you run it through docker. Email address of the admin that should be created.
 - `DJANGO_SUPERUSER_PASSWORD`: Only needed when you run it through docker. Password of the admin that should be created.
 - `DJANGO_SUPERUSER_FIRST_NAME`: Only needed when you run it through docker. First name of the admin that should be created.

@@ -128,7 +128,8 @@ class LabInstanceViewSet(mixins.CreateModelMixin,
         allowed_vmis_query = ",".join([elm.docker_image_name for elm in all_lab_docker_images])
         lab_vnc_path = f"{settings.LAB_VNC_PROTOCOL}://{settings.LAB_VNC_HOST}:{settings.LAB_VNC_PORT}/" \
                        f"{settings.LAB_VNC_PATH}?host={settings.WS_PROXY_HOST}&port={settings.WS_PROXY_PORT}" \
-                       f"&path={lab_instance_kubernetes.jwt_token}/{lab_docker_images[0]['docker_image_name']}" \
+                       f"&path={settings.WS_PROXY_PATH_PREFIX}/" \
+                       f"{lab_instance_kubernetes.jwt_token}/{lab_docker_images[0]['docker_image_name']}" \
                        f"&allowed_vmis={allowed_vmis_query}" \
                        f"&autoconnect=1"
         data = {

@@ -9,3 +9,4 @@ dj-rest-auth==2.1.11
 django-allauth==0.45.0
 rules==2.2
 ai-django-core==4.0.1
+django-filter==2.4.0

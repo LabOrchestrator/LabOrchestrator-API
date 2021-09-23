@@ -15,6 +15,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',    # https://github.com/encode/django-rest-framework/issues/6250
+    'django_filters',              # filters
     'django.contrib.sites',        # allauth social login and dependency of dj_rest_auth password reset and registration
     'allauth',                     # allauth social login and dependency of dj_rest_auth registration
     'allauth.account',             # allauth social login and dependency of dj_rest_auth registration
@@ -22,8 +23,9 @@ INSTALLED_APPS = [
     'dj_rest_auth',                # enables authentication rest-api and user changes including password-reset
     'dj_rest_auth.registration',   # enables registration rest-api
     'lab_orchestrator_lib_django_adapter',
-    'user.apps.UserConfig',  # app that contains user model
-    'user_auth.apps.UserAuthConfig',  # app for profile, authentication and registration; uses dj_rest_auth and allauth
+    'user',  # app that contains user model
+    'user_auth',  # app for profile, authentication and registration; uses dj_rest_auth and allauth
+    'instructions',  # app for profile, authentication and registration; uses dj_rest_auth and allauth
 ]
 
 MIDDLEWARE = [
@@ -105,6 +107,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.OrderingFilter',
         'rest_framework.filters.SearchFilter'
     ),

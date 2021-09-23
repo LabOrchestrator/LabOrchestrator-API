@@ -53,6 +53,7 @@ Check out the developer documentation at [laborchestrator-api.readthedocs.io](ht
 - `WS_PROXY_PORT` (int): The port of the ws proxy instance. Default is 30002, you should set it to 80 or 443.
 - `DJANGO_SUPERUSER_EMAIL` (str): Only needed when you run it through docker. Email address of the admin that should be created.
 - `DJANGO_SUPERUSER_PASSWORD`: Only needed when you run it through docker. Password of the admin that should be created.
+- `DJANGO_SUPERUSER_FIRST_NAME`: Only needed when you run it through docker. First name of the admin that should be created.
 - `AMOUNT_WORKERS`: Only needed when you run it through docker. Amount of gunicorn workers that should be started to handle requests.
 
 

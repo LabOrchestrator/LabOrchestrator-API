@@ -16,4 +16,4 @@ class UserSerializer(serializers.ModelSerializer):
         model = get_user_model()
         fields = ["id", "email", "first_name", "last_name", "full_name",
                   "display_name", "real_display_name", "date_joined",
-                  "is_staff", "is_active", "is_superuser"]
+                  "is_staff", "is_active", "is_superuser", "is_trusted"]

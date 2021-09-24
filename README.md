@@ -96,6 +96,30 @@ When done with your lab instance you should delete it, because it wont be delete
 
 In addition to the browsable API you have an openapi-schema and a swagger ui.
 
+## Permissions
+
+There are 4 permission levels:
+
+1. Not Authenticated
+   
+   Allowed to see: Docker images, labs, lab docker images and instructions. These resources are
+   public data. They are also allowed to use the registration or login methods in the rest auth api.
+   
+2. User
+   
+   Users who are not trusted can see their lab instances but not create new ones. They can also see their user profile and
+   change it in the rest auth api.
+
+3. Trusted User
+   
+   Trusted users are allowed to create lab instances. To get a trusted user an admin needs to change the is_trusted
+   state of the user in the admin page.
+
+4. Admin
+
+   Admins can use the admin page (/admin).
+
+
 ## Contributing
 
 ### Issues

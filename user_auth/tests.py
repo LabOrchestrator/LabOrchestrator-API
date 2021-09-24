@@ -127,7 +127,7 @@ class RegistrationAPIViewTestCase(EmailTestCase):
         response = self.client.post(self.url, {"email": "register@example.com", "password1": "Geheim1234!",
                                                "password2": "Geheim1234!", "first_name": "felix", "last_name": "",
                                                "display_name": "hallo", "is_trusted": "True"})
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
         self.assertFalse(User.objects.get(email="register@example.com").is_trusted)
 
     def test_get(self):

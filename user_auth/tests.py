@@ -5,6 +5,7 @@ from allauth.account.models import EmailAddress
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from commons.utils_testing import TokenLoginAPITestCase
+from user.models import User
 
 """
 EMAIL TESTING BLOG:
@@ -120,6 +121,14 @@ class RegistrationAPIViewTestCase(EmailTestCase):
                                                "password2": "Geheim1234!", "first_name": "felix", "last_name": "",
                                                "display_name": ""})
         self.assertEqual(response.status_code, 201)
+
+    def test_registration_with_is_trusted(self):
+        """Is trusted should not be true."""
+        response = self.client.post(self.url, {"email": "register@example.com", "password1": "Geheim1234!",
+                                               "password2": "Geheim1234!", "first_name": "felix", "last_name": "",
+                                               "display_name": "hallo", "is_trusted": "True"})
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(User.objects.get(email="register@example.com").is_trusted)
 
     def test_get(self):
         response = self.client.get(self.url)
@@ -271,6 +280,13 @@ class MeAPIViewTestCase(EmailTestCase):
         me_json = self.get_me_json(self.user)
         response = self.client.patch(self.url, {"first_name": ""})
         self.assertEqual(response.status_code, 400)
+
+    def test_patch_no_empty_is_trusted(self):
+        """Test if firstname can't be patched to empty name."""
+        me_json = self.get_me_json(self.user)
+        response = self.client.patch(self.url, {"is_trusted": "true"})
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(self.user.is_trusted)
 
     def test_patch_last_name(self):
         me_json = self.get_me_json(self.user)

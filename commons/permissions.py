@@ -91,3 +91,12 @@ class IsAdminOrReadOnly(BasePermission):
 
     def has_permission(self, request, view):
         return bool(request.method in SAFE_METHODS or (request.user and request.user.is_staff))
+
+
+class IsTrustedOrReadOnly(BasePermission):
+    """
+    The request is authenticated as an trusted member, or is a read-only request.
+    """
+
+    def has_permission(self, request, view):
+        return bool(request.method in SAFE_METHODS or (request.user and request.user.is_trusted))

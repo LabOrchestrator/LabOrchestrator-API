@@ -21,7 +21,7 @@ from lab_orchestrator_lib_django_adapter.serializers import LabInstanceModelSeri
 from lab_orchestrator_lib_auth.auth import LabInstanceTokenParams, generate_auth_token
 from lab_orchestrator_lib.controller.controller import LabInstanceController
 
-from commons.permissions import IsAdminOrReadOnly
+from commons.permissions import IsAdminOrReadOnly, IsTrustedOrReadOnly
 from lab_orchestrator import settings
 from lab_orchestrator_app.serializers import LabDockerImageModelSerializer
 
@@ -86,7 +86,7 @@ class LabInstanceViewSet(mixins.CreateModelMixin,
     will also create other resources for example a kubernetes namespace and virtual machines. So it's needed to use the
     controller here.
     """
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsTrustedOrReadOnly]
     queryset = LabInstanceModel.objects.all()
 
     def __init__(self, *args, **kwargs):

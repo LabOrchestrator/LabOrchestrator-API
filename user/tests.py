@@ -10,6 +10,7 @@ def user_json(user):
             "real_display_name": user.get_real_display_name(),
             "date_joined": serializers.DateTimeField().to_representation(user.date_joined),
             "is_active": user.is_active, "is_staff": user.is_staff, "is_superuser": user.is_superuser,
+            "is_trusted": user.is_trusted,
             }
 
 

@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'allauth.account',             # allauth social login and dependency of dj_rest_auth registration
     'allauth.socialaccount',       # allauth social login and dependency of dj_rest_auth registration
     'dj_rest_auth',                # enables authentication rest-api and user changes including password-reset
+    'lab_orchestrator_app',   # enables registration rest-api
     'dj_rest_auth.registration',   # enables registration rest-api
     'lab_orchestrator_lib_django_adapter',
     'user',  # app that contains user model
@@ -151,7 +152,7 @@ DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', "Django App")
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -190,4 +191,3 @@ REST_AUTH_SERIALIZERS = {
 REST_AUTH_REGISTER_SERIALIZERS = {
     'REGISTER_SERIALIZER': 'user_auth.serializers.CustomRegisterSerializer',
 }
-

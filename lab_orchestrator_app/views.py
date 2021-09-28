@@ -16,14 +16,13 @@ from rest_framework.response import Response
 
 from lab_orchestrator_lib_django_adapter.controller_collection import get_default_cc
 from lab_orchestrator_lib_django_adapter.models import LabInstanceModel, LabModel, DockerImageModel, LabDockerImageModel
-from lab_orchestrator_lib_django_adapter.serializers import LabInstanceModelSerializer, LabInstanceKubernetesSerializer, \
-    LabModelSerializer, DockerImageModelSerializer
 from lab_orchestrator_lib_auth.auth import LabInstanceTokenParams, generate_auth_token
 from lab_orchestrator_lib.controller.controller import LabInstanceController
 
 from commons.permissions import IsAdminOrReadOnly, IsTrustedOrReadOnly
 from lab_orchestrator import settings
-from lab_orchestrator_app.serializers import LabDockerImageModelSerializer
+from lab_orchestrator_app.serializers import LabInstanceModelSerializer, LabInstanceKubernetesSerializer, \
+    LabModelSerializer, DockerImageModelSerializer, LabDockerImageModelSerializer
 
 
 class DockerImageViewSet(viewsets.ModelViewSet):

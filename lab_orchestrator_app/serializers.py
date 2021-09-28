@@ -56,7 +56,7 @@ class LabInstanceModelLabSerializer(serializers.ModelSerializer):
 class LabInstanceModelUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ['id', 'username']
+        fields = ['id', 'email']
 
 
 class LabInstanceModelSerializer(serializers.ModelSerializer):
